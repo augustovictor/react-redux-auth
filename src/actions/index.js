@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { browserHistory } from 'react-router'; // Communicate information about the URL to react-router and also make changes to url
-import { SIGNIN_USER, AUTH_ERROR } from './types';
+import { SIGNIN_USER, AUTH_ERROR, SIGN_OUT_USER } from './types';
 
 const ROOT_URL = 'http://localhost:4000';
 
@@ -24,4 +24,9 @@ export function authError(string) {
         type: AUTH_ERROR,
         payload: string
     };
+}
+
+export function signOutUser() {
+    localStorage.removeItem('token');
+    return { type: SIGN_OUT_USER };
 }
