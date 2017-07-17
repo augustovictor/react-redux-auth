@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { browserHistory } from 'react-router'; // Communicate information about the URL to react-router and also make changes to url
-import { SIGNIN_USER, AUTH_ERROR, SIGN_OUT_USER } from './types';
+import { SIGNIN_USER, AUTH_ERROR, SIGN_OUT_USER, SIGN_UP_USER, SIGNUP_ERROR } from './types';
 
 const ROOT_URL = 'http://localhost:4000';
 
@@ -29,4 +29,18 @@ export function authError(string) {
 export function signOutUser() {
     localStorage.removeItem('token');
     return { type: SIGN_OUT_USER };
+}
+
+export function signUpUser({ name, email, password }) {
+    return function(dispatch) {
+        axios.post(`${ROOT_URL}/users`, { name, email, password })
+        .then(response => {
+            dispatch({ type: SIGN_UP_USER });
+            localStorage.setItem('token', response.headers['x-auth']);
+            browserHistory.push('/feature');
+        })
+        .catch(err => {
+            dispatch(authError(err));
+        });
+    }
 }
