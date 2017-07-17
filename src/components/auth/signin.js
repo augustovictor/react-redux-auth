@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
+import { connect } from 'react-redux';
+import * as actions from '../../actions';
 
 class SignIn extends Component {
 
     handleFormSubmit({ email, password }) {
-        console.log(email, ' ', password);
+        this.props.signInUser({ email, password });
     }
 
     renderField(field) {
@@ -13,6 +15,16 @@ class SignIn extends Component {
                 <input { ...field.input } type={ field.type } className="form-control" />
             </div>
         );
+    }
+
+    renderMessage() {
+        if(this.props.errorMessage) {
+            return (
+                <div className="alert alert-danger">
+                    <strong>Oops! </strong> { this.props.errorMessage }
+                </div>
+            );
+        }
     }
     
     render() {
@@ -31,13 +43,18 @@ class SignIn extends Component {
                     <Field type="password" name="password" component={ this.renderField } />
                 </fieldset>
 
+                { this.renderMessage() }
                 <button action="submit" className="btn btn-primary">Sign in</button>
             </form>
         );
     }
 }
 
-export default reduxForm({
-    form: 'signin', // Where the data of this form will be stored in state
-    fields: ['email','password'] // Gives us access to this.props.email and this.props.password
-})(SignIn);
+function mapStateToProps(state) {
+    return {
+        errorMessage: state.auth.error
+    };
+}
+
+const signInForm = reduxForm({ form: 'signin' })(SignIn);
+export default connect(mapStateToProps, actions)(signInForm);
