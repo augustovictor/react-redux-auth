@@ -15,10 +15,19 @@ import Feature from './components/feature';
 import RequireAuth from './components/require_auth';
 import Welcome from './components/welcome';
 
+import { SIGNIN_USER } from './actions/types';
+
 const createStoreWithMiddleware = applyMiddleware(reduxThunk)(createStore);
+const store = createStoreWithMiddleware(reducers); // All the state inside the application
+
+const token = localStorage.getItem('token');
+
+if(token) {
+  store.dispatch({ type: SIGNIN_USER }); // Sent to all reducers in the application
+}
 
 ReactDOM.render(
-  <Provider store={createStoreWithMiddleware(reducers)}>
+  <Provider store={ store }>
     <Router history={ browserHistory }>
       <Route path="/" component={ App }>
         <IndexRoute component={ Welcome } />
