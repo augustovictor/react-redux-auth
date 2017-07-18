@@ -39,7 +39,7 @@ class SignIn extends Component {
                 </fieldset>
 
                 <fieldset className="form-group">
-                    <label htmlFor="">Email:</label>
+                    <label htmlFor="">Password:</label>
                     <Field type="password" name="password" component={ this.renderField } />
                 </fieldset>
 
