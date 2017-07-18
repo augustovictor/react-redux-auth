@@ -35,12 +35,12 @@ export function signUpUser({ name, email, password }) {
     return function(dispatch) {
         axios.post(`${ROOT_URL}/users`, { name, email, password })
         .then(response => {
-            dispatch({ type: SIGN_UP_USER });
-            localStorage.setItem('token', response.headers['x-auth']);
+            dispatch({ type: SIGNIN_USER });
+            localStorage.setItem('token', response.data.tokens[0].token);
             browserHistory.push('/feature');
         })
         .catch(err => {
-            dispatch(authError(err));
+            dispatch(authError(err.response.data.errors));
         });
     }
 }

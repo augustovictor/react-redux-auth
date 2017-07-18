@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
+import _ from 'lodash';
 
 class SignUp extends Component {
 
-    handleFormSubmit({ name, email, password }) {
-        this.props.signUpUser({ name, email, password });
+    handleFormSubmit(formProps) {
+        this.props.signUpUser(formProps);
     }
 
     renderField(field) {
@@ -20,10 +21,16 @@ class SignUp extends Component {
         );
     }
 
-    renderMessages() {
-        if(this.props.errorMessage) {
-            console.log(this.props.errorMessage);
-            return <i>We got errors.</i>
+    renderErrorMessages() {
+        const errors = this.props.errorMessages;
+        if(errors) {
+            return _.map(errors, error => {
+                return (
+                    <div className="alert alert-danger" key={ error.message }>
+                        <strong>{ error.message }</strong>
+                    </div>
+                );
+            })
         }
     }
     
@@ -54,7 +61,7 @@ class SignUp extends Component {
                         <Field type="password" name="passwordConfirm" component={ this.renderField } />
                     </fieldset>
 
-                    { this.renderMessages() }
+                    { this.renderErrorMessages() }
 
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form>
@@ -63,6 +70,7 @@ class SignUp extends Component {
     }
 }
 
+// handleSubmit will not be called if there is any error :D
 function validate(formProps) {
     const errors = {};
 
@@ -76,7 +84,7 @@ function validate(formProps) {
 }
 
 function mapStateToProps(state) {
-    return { errorMessage: state.auth.error };
+    return { errorMessages: state.auth.error };
 }
 
 const signupForm = reduxForm({ form: 'signup', validate })(SignUp);

@@ -3,7 +3,7 @@ import { SIGNIN_USER, SIGN_OUT_USER, SIGN_UP_USER, AUTH_ERROR } from '../actions
 export default function(state = {}, action) {
     switch(action.type) {
         case SIGNIN_USER: {
-            return { ...state, authenticated: true }; // Returns all the state plus authenticate: true
+            return { ...state, error: '', authenticated: true }; // Returns all the state plus authenticate: true
         }
 
         case SIGN_OUT_USER: {
