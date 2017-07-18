@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { browserHistory } from 'react-router'; // Communicate information about the URL to react-router and also make changes to url
-import { SIGNIN_USER, AUTH_ERROR, SIGN_OUT_USER, SIGN_UP_USER, SIGNUP_ERROR } from './types';
+import { SIGNIN_USER, AUTH_ERROR, SIGN_OUT_USER, SIGN_UP_USER, SIGNUP_ERROR, FETCH_USERS } from './types';
 
 const ROOT_URL = 'http://localhost:4000';
 
@@ -41,6 +41,26 @@ export function signUpUser({ name, email, password }) {
         })
         .catch(err => {
             dispatch(authError(err.response.data.errors));
+        });
+    }
+}
+
+export function fetchUsers() {
+    // Redux thunk function
+    return dispatch => {
+        axios.get(`${ ROOT_URL }/users`, {
+            headers: {
+                'x-auth': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        .then(response => {
+            dispatch({
+                type: FETCH_USERS,
+                payload: response.data
+            });
+        })
+        .catch(err => {
+            console.log(err.response);
         });
     }
 }
